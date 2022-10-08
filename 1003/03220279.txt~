@@ -1,0 +1,15 @@
+配布資料2.3のActionファイルのところで、書いてあるとおりにすすめていって最後にcatkin buildをすると、
+
+Errors     << beginner_tutorials:check /home/mech-user/catkin_ws/logs/beginner_tutorials/build.check\
+.008.log
+CMake Error at /opt/ros/melodic/share/genmsg/cmake/genmsg-extras.cmake:98 (message):
+  generate_messages() must be called after add_message_files()
+Call Stack (most recent call first):
+  CMakeLists.txt:111 (add_message_files)
+
+
+make: *** [cmake_check_build_system] Error 1
+
+というエラーが出た。
+
+
