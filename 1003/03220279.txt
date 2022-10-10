@@ -13,3 +13,26 @@ make: *** [cmake_check_build_system] Error 1
 というエラーが出た。
 
 いろいろ調べ、generate_message()等を消してもう一度cakin buildをしてみるなどしたが、原因がどうにもわからなかったので、もういちどpackageから作り直してみた。すると、うまくいった。
+
+
+
+次に、課題１について。
+まずは、gitにのってあるものを参考に、new_teleop_twist_keyboardというパッケージをつくり、CMakeListやpackage.xmlを書き換えていった。
+そして、catkin buildをしたあとに、
+rosrun new_teleop_keyboard teleop_keyboard.py
+とすると、
+[rospack]Error: package'new_teleop_keyboard' not found
+とでたので、色々調べた結果、
+source ~/catkin_ws/devel/setup.bashとコマンドラインで入力した。すると、上のエラーはなくなった。
+(参考：https://stackoverflow.com/questions/56139647/how-to-fix-rospack-error-package-my-package-not-found )
+
+
+すると次は、
+mech-user@ki00104:~/catkin_ws/src/new_teleop_twist_keyboard$ rosrun new_teleop_twist_keyboard teleop_twist_keyboard.py
+[rosrun] Couldn't find executable named teleop_twist_keyboard.py below /home/mech-user/catkin_ws/src/new_teleop_twist_keyboard
+[rosrun] Found the following, but they're either not files,
+[rosrun] or not executable:
+[rosrun]   /home/mech-user/catkin_ws/src/new_teleop_twist_keyboard/teleop_twist_keyboard.py
+
+というエラーが出てきた。そこで、ファイル名の前にchmod +x をつけて実行権限を付与してあげると（バトルシップで出てきた！）、うまくいった。
+（参考：https://www.theconstructsim.com/ros-qa-084-found-following-theyre-either-not-files-not-exe/）
