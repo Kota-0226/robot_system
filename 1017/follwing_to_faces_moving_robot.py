@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import rospy
+#from opencv_apps.msg import RotatedRectStamped
+from opencv_apps.msg import FaceArrayStamped
+from geometry_msgs.msg import Twist
+
+faces = FaceArrayStamped() ## 大域変数として定義
+def cb(msg):
+    global faces ## 大域変数の利用を宣言
+    ## 画像処理の結果を取得
+    
+    #area = msg.faces.face.width * msg.faces.face.height
+    #
+    #rospy.loginfo("area = {}, center = ({}, {})".format(
+        # area, msg.faces.face.x, msg.faces.face.y))
+    ## 認識されると faces に登録
+    if msg.faces != []:
+        faces = msg
+
+if __name__ == '__main__': # メイン文
+    try:
+        rospy.init_node('client')
+        rospy.Subscriber('/face_detection/faces', FaceArrayStamped, cb)
+        pub = rospy.Publisher('/cmd_vel', Twist)
+        rate = rospy.Rate(10)
+        while not rospy.is_shutdown():
+            ## cmd_vel インスタンスを生成
+            cmd_vel = Twist()
+            ## 古い rect = 認識結果は利用しない
+            faces_arrived = rospy.Time.now() - faces.header.stamp
+            ## 最大 1 秒前の認識結果を利用
+            #もしかおがにんしきされたときのもの
+            #このときだけ左回転する
+            if faces_arrived.to_sec() < 1.0:
+               cmd_vel.angular.z = 0.2 
+                
+                #if rect.rect.center.x < 320:
+                #cmd_vel.angular.z = 0.1
+                #else:
+                    #cmd_vel.angular.z =-0.1
+            #対象物がカメラから消えたときの操作司令（右回転させる）
+            else:
+                cmd_vel.angular.z = -0.2
+
+            rospy.loginfo("\t\t\t\t\t\tpublish {}".format(cmd_vel.angular.z))
+            pub.publish(cmd_vel)
+            rate.sleep()
+
+    except rospy.ROSInterruptException: pass # エラーハンドリング
