@@ -1,0 +1,30 @@
+(setq s1
+      (make-gdome (make-gdome (make-gdome (make-icosahedron 50)))))
+(send s1 :set-color :yellow)
+(send s1 :locate #f(100 100 0))
+
+(setq s2
+      (make-gdome (make-gdome (make-gdome (make-icosahedron 100)))))
+(send s2 :set-color :blue)
+(send s2 :locate #f(500 500 0))
+
+(send s2 :assoc s1)
+
+
+(setq s3
+      (make-gdome (make-gdome (make-gdome (make-icosahedron 1000)))))
+(send s3 :set-color :red)
+;;(send s3 :locate #f(200 300 0))
+
+(send s3 :assoc s2)
+
+(make-irtviewer)
+(objects (list s1 s2 s3))
+
+(dotimes (i 1000)
+  ;;(send s2 :rotate (deg2rad 2) :z) ;; どれくらい回るかをdegで表している
+  ;;(send s2 :locate #f(+ ここいじればいけんじゃね
+  (send s3 :rotate (deg2rad2) :z)
+  (send s2 :rotate (deg2rad 2) :z)
+  (send *irtviewer* :draw-objects) ;; 画面を再描画する
+  (x::window-main-one)) ;; GUI のイベント処理を行う

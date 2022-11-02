@@ -13,9 +13,7 @@ def cb(msg):
     
     #area = msg.faces.face.width * msg.faces.face.height
     #
-    #rospy.loginfo("area = {}, center = ({}, {})".format(
-        # area, msg.faces.face.x, msg.faces.face.y))
-    ## 認識されると faces に登録
+    ## 顔が認識されると faces に登録
     if msg.faces != []:
         faces = msg
 
@@ -28,7 +26,7 @@ if __name__ == '__main__': # メイン文
         while not rospy.is_shutdown():
             ## cmd_vel インスタンスを生成
             cmd_vel = Twist()
-            ## 古い rect = 認識結果は利用しない
+            ## 古い faces = 認識結果は利用しない
             faces_arrived = rospy.Time.now() - faces.header.stamp
             ## 最大 1 秒前の認識結果を利用
             #もしかおがにんしきされたときのもの
@@ -36,10 +34,6 @@ if __name__ == '__main__': # メイン文
             if faces_arrived.to_sec() < 1.0:
                cmd_vel.angular.z = 0.2 
                 
-                #if rect.rect.center.x < 320:
-                #cmd_vel.angular.z = 0.1
-                #else:
-                    #cmd_vel.angular.z =-0.1
             #対象物がカメラから消えたときの操作司令（右回転させる）
             else:
                 cmd_vel.angular.z = -0.2

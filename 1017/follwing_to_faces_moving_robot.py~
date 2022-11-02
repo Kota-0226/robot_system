@@ -11,12 +11,12 @@ def cb(msg):
     global faces ## 大域変数の利用を宣言
     ## 画像処理の結果を取得
     
-    area = msg.faces.face.width * msg.faces.face.height
+    #area = msg.faces.face.width * msg.faces.face.height
     #
-    rospy.loginfo("area = {}, center = ({}, {})".format(
-         area, msg.faces.face.x, msg.faces.face.y))
+    #rospy.loginfo("area = {}, center = ({}, {})".format(
+        # area, msg.faces.face.x, msg.faces.face.y))
     ## 認識されると faces に登録
-    if area > 100*100:
+    if msg.faces != []:
         faces = msg
 
 if __name__ == '__main__': # メイン文
